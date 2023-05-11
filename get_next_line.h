@@ -4,13 +4,8 @@
 # include <unistd.h>
 # include <stdlib.h>
 
-#  define BUFFER_SIZE 42
-# endif
-
-# ifndef OPEN_MAX
-
 # ifndef BUFFER_SIZE
-#  define OPEN_MAX 1024
+#  define BUFFER_SIZE 42
 # endif
 
 char	*ft_strchr(char const *s, int c);
