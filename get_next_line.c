@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mamottet <mamottet@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/11 12:47:17 by mamottet          #+#    #+#             */
+/*   Updated: 2023/05/15 10:23:56 by mamottet         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 static char	*ft_next(char **temp)
@@ -9,41 +21,41 @@ static char	*ft_next(char **temp)
 	while (*ptr && *ptr != '\n')
 		++ptr;
 	ptr += (*ptr == '\n');
-	line = ft_substr (*temp, 0, (size_t)(ptr - *temp));
+	line = ft_substr(*temp, 0, (size_t)(ptr - *temp));
 	if (!line)
 	{
-		free (*temp);
+		free(*temp);
 		return (NULL);
 	}
-	ptr = ft_substr (ptr, 0, ft_strlen (ptr));
-	free (*temp);
+	ptr = ft_substr(ptr, 0, ft_strlen(ptr));
+	free(*temp);
 	*temp = ptr;
 	return (line);
 }
 
 static char	*ft_read(char *temp, int fd, char *buf)
 {
-	ssize_t		r;
+	ssize_t	r;
 
 	r = 1;
-	while (r && !ft_strchr (temp, '\n'))
+	while (r && !ft_strchr(temp, '\n'))
 	{
-		r = read (fd, buf, BUFFER_SIZE);
+		r = read(fd, buf, BUFFER_SIZE);
 		if (r == -1)
 		{
-			free (buf);
-			free (temp);
+			free(buf);
+			free(temp);
 			return (NULL);
 		}
 		buf[r] = 0;
-		temp = ft_strjoin_free_s1 (temp, buf);
+		temp = ft_strjoin_free_s1(temp, buf);
 		if (!temp)
 		{
-			free (buf);
+			free(buf);
 			return (NULL);
 		}
 	}
-	free (buf);
+	free(buf);
 	return (temp);
 }
 
@@ -52,24 +64,24 @@ char	*get_next_line(int fd)
 	static char	*temp[BUFFER_SIZE + 1];
 	char		*buf;
 
-	if (fd == -1 || BUFFER_SIZE < 1)
+	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
 	if (!temp[fd])
 		temp[fd] = ft_strdup("");
 	if (!temp[fd])
 		return (NULL);
-	buf = malloc (sizeof (*buf) * (BUFFER_SIZE + 1));
+	buf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
 	{
-		free (temp[fd]);
+		free(temp[fd]);
 		return (NULL);
 	}
-	temp[fd] = ft_read (temp[fd], fd, buf);
+	temp[fd] = ft_read(temp[fd], fd, buf);
 	if (!temp[fd])
 		return (NULL);
 	if (!*temp[fd])
 	{
-		free (temp[fd]);
+		free(temp[fd]);
 		temp[fd] = NULL;
 		return (NULL);
 	}
