@@ -12,7 +12,7 @@
 
 #include "get_next_line.h"	
 
-static char	*function_name(int fd, char *buf, char *backup)
+static char	*name(int fd, char *buf, char *tmp)
 {
 	int		read_line;
 	char	*char_temp;
@@ -21,21 +21,22 @@ static char	*function_name(int fd, char *buf, char *backup)
 	while (read_line != '\0')
 	{
 		read_line = read(fd, buf, BUFFER_SIZE);
+		printf("%c",read_line);
 		if (read_line == -1)
 			return (0);
 		else if (read_line == 0)
 			break ;
 		buf[read_line] = '\0';
-		if (!backup)
-			backup = ft_strdup("");
-		char_temp = backup;
-		backup = ft_strjoin(char_temp, buf);
+		if (!tmp)
+			tmp = ft_strdup("");
+		char_temp = tmp;
+		tmp = ft_strjoin(char_temp, buf);
 		free(char_temp);
 		char_temp = NULL;
 		if (ft_strchr (buf, '\n'))
 			break ;
 	}
-	return (backup);
+	return (tmp);
 }
 
 static char	*extract(char *line)
@@ -62,18 +63,18 @@ char	*get_next_line(int fd)
 {
 	char		*line;
 	char		*buf;
-	static char	*backup;
+	static char	*tmp;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
 	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
 		return (0);
-	line = function_name(fd, buf, backup);
+	line = name(fd, buf, tmp);
 	free(buf);
 	buf = NULL;
 	if (!line)
 		return (NULL);
-	backup = extract(line);
+	tmp = extract(line);
 	return (line);
 }
